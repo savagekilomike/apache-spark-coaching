@@ -1,0 +1,7 @@
+- source files of apache spark documentation
+- Spark vs. Pandas
+    - capabilities
+    - performance
+- abstractions behind the documentation?
+- what is Spark Connect?
+- how to selectively commit multiple files?
