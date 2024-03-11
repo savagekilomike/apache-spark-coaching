@@ -3,11 +3,6 @@
 - Spark vs. Pandas
     - capabilities
     - performance
-- abstractions behind the documentation?
-- what is Spark Connect?
-- how to selectively commit multiple files?
-
-
 - how to add sorting by month in 'MMM' format?
 
 ```python
@@ -17,3 +12,6 @@ df.groupby(year(df['date']).alias("year"),  \
             .sort(ax("close"))             \
             .show()
 ```
+
+- abstractions behind the documentation?
+- what is Spark Connect?
