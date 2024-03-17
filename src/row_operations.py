@@ -36,15 +36,17 @@ df.sort(df["date"].desc(), df["close"])
 
 # GROUPING + SORTING
 df.groupby("date").max("close").show()
+
 df.groupby(
             year(df['date']).alias("year"),                 \
             month(df['date']).alias("month"),               \
-#            date_format(df['date'], 'MMM').alias("month")   \
+            date_format(df['date'], 'MMM').alias("month_name")   \
            )                                                \
             .agg(                                       \
                     max("close").alias("max_close"),    \
                     avg("close").alias("avg_close"),    \
                 )                                       \
             .sort(col("max_close").desc())              \
+            .drop("month")                              \
             .show()
-#            .sort(max("close").desc())                 \
+
