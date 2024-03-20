@@ -3,7 +3,7 @@ from pyspark.sql import SparkSession, DataFrame, Column
 from pyspark.sql.types import *
 from pyspark.sql.functions import date_format, date_add, year, month, max, avg, sum, col, when
 
-pyspark.sql.Column.when()
+#pyspark.sql.Column.when()
 
 
 spark = SparkSession        \
