@@ -4,3 +4,4 @@ data/etfs/
 data/stocks/
 data/symbols_valid_meta.csv
 obsidian-vault-apache-spark/
+**/__pycache__/
