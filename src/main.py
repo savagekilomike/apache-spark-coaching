@@ -2,19 +2,19 @@ from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
 from data_store import DataStore
+from prepare import PrepareStep
 
 
-def test_data_store() -> None:
+def prepare_data() -> None:
     spark = SparkSession        \
         .builder                \
-        .appName("data-store")    \
+        .appName("prepare-data")    \
         .master("local[*]")     \
         .getOrCreate()
 
     data_store = DataStore(spark)
-    df = data_store.load_stock_raw("aapl")
-    df.show()
+    prepare_step = PrepareStep(spark, data_store)
+    prepare_step.run()
 
-
-#if __name__ == "__main__":
-#    test_data_store()
+if __name__ == "__main__":
+    prepare_data()
