@@ -34,12 +34,12 @@ class DataStore:
 
         return df
 
-
+    # rename the method
     def store_stock_cln(self, symbol: str, df: DataFrame) -> None:
         """ Export DataFrame to Parquet and store to data/cln/ """
         with open("src/config.json", "r") as config_file:
             config = json.load(config_file)
-        output_dir = config["input_dir"]
+        output_dir = config["output_dir"]
 
         path = f"{output_dir}{symbol.upper()}/"
         df.write.parquet(path=path, mode="overwrite")

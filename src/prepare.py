@@ -27,10 +27,10 @@ class PrepareStep:
         """
         #df_config.show()
         
-        
         with open("src/config.json", "r") as config_file:
             config = json.load(config_file)
         symbols = config["symbols"]
+
         # symbols = ["aapl"]
         # symbols = ["aapl", "abb", "abc", "ba", "band"]
         
