@@ -1,41 +1,35 @@
-# Prepare data
-#   - Load raw CSV: 
-#       - adjust data types
-#       - rename columns
-#   - Export DataFrame to Parquet, save to data/cln
-
 from pyspark.sql import SparkSession, DataFrame
 from pyspark.sql.types import *
 from pyspark.sql.functions import *
+import argparse
+
 from data_store import DataStore
-import json
+from app_context import AppContext
+
 
 class PrepareStep:
 
-    def __init__(self, spark: SparkSession, data_store: DataStore) -> None:
-        self.spark = spark
+    def __init__(self, app_context: AppContext, data_store: DataStore) -> None:
+        self.spark = app_context.spark
+        self.config = app_context.config
         self.data_store = data_store
 
-    def run(self) -> None:
-        """
-        df_config = self.spark.read.json("src/config.json")
-        """
-        """
-                df_config = self.spark.read \
-                    .format("json") \
-                    .load("src/config.json")
-        """
-        #df_config.show()
-        
-        with open("src/config.json", "r") as config_file:
-            config = json.load(config_file)
-        symbols = config["symbols"]
-
-        # symbols = ["aapl"]
-        # symbols = ["aapl", "abb", "abc", "ba", "band"]
-        
+    def run(self) -> None:  
+        symbols = self.config["prepare"]["symbols"]
 
         for symbol in symbols:
             df = self.data_store.load_stock_raw(symbol)
-            df.show()
-            self.data_store.store_stock_cln(symbol, df)
+            self.data_store.save_stock_cln(symbol, df)
+
+
+if __name__ == "__main__":
+#    parser = argparse.ArgumentParser(description='Process configuration file for Spark application.')
+#    parser.add_argument('config_file', type=str, help='Path to the configuration file')
+#    args = parser.parse_args()
+    
+    #app_context = AppContext(args.config_file)
+    app_context = AppContext()
+
+    data_store = DataStore(app_context)
+    prepare_step = PrepareStep(app_context, data_store)
+    prepare_step.run()
