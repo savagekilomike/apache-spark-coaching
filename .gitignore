@@ -1,8 +1,7 @@
+.vscode/
+.idea/
 venv/
-data/archive.zip
-data/etfs/
-data/stocks/
-data/symbols_valid_meta.csv
+data/
 obsidian-vault-apache-spark/
 **/__pycache__/
 *.png

@@ -1,10 +1,11 @@
-from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.types import *
+from pathlib import Path
+
 from pyspark.sql.functions import *
 from pyspark.sql.window import Window
 
 from app_context import AppContext
 from data_store import DataStore
+
 
 class Analyzer:
 
@@ -13,7 +14,7 @@ class Analyzer:
         self.config = app_context.config
         self.data_store = data_store
 
-    def run(self) -> None:  
+    def run(self) -> None:
         """ 
         Highest closing price per year: 
         - Should return the row in the input DataFrame of the day 
@@ -27,10 +28,8 @@ class Analyzer:
 
         for symbol in symbols:
             symbol = symbol.upper()
-            df = (self.data_store
-                  .load_stock_cln(symbol)
-                  .withColumn("symbol", lit(symbol))
-                  )
+            df = self.data_store.load_stock_cln(symbol) \
+                .withColumn("symbol", lit(symbol))
 
             max_close_price = self.max_value_for_year(df)
             max_close_price.show()
@@ -43,25 +42,25 @@ class Analyzer:
         if max_close_agg is not None:
             self.data_store.save_drv("max_close_agg", max_close_agg)
 
-
     @staticmethod
     def max_value_for_year(df: DataFrame, column: str = "close") -> DataFrame:
-        window_spec = (Window
-            .partitionBy(year(col("date")))
-            .orderBy(desc(column), "date"))
-        
-        df_ranked = (df
-                     .withColumn("rank", rank().over(window_spec))
-                     .drop("rank"))
+        window_spec = Window.partitionBy(year(col("date"))) \
+            .orderBy(col(column).desc(), col("date"))
 
-        max_close_price = df_ranked.filter(col("rank") == 1)
+        df_ranked = df.withColumn("rank", rank().over(window_spec)) \
+            .filter(col("rank") == 1) \
+            .drop("rank")
 
-        return max_close_price    
-    
+        return df_ranked
+
 
 if __name__ == "__main__":
-    app_context = AppContext()
+    if len(sys.argv) == 2:
+        config_file = sys.argv[1]
+    else:
+        config_file = "config/config.json"
 
+    app_context = AppContext(Path(config_file))
     data_store = DataStore(app_context)
     analysis_step = Analyzer(app_context, data_store)
     analysis_step.run()

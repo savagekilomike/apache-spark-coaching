@@ -1,31 +1,17 @@
 {
-    "spark_app": {
-        "app_name": "prepare_step",
+    "spark": {
+        "app.name": "prepare_step",
         "master": "local[*]"
     },
-    
-    "prepare": {
-        "input_dir": "data/raw/",
-        "output_dir": "data/cln/",
-        "symbols": [
-            "aapl"
-            , "abb"
-            , "abc"
-            , "ba"
-            , "band"
-        ]
+    "dataStore": {
+        "rawDir": "data/raw",
+        "clnDir": "data/cln",
+        "drvDir": "data/drv"
     },
-    
+    "prepare": {
+        "symbols": ["aapl", "abb", "abc", "ba", "band"]
+    },
     "analyze": {
-        "input_dir": "data/cln/",
-        "output_dir": "data/drv/",
-        "symbols": [
-            "aapl"
-            , "abb"
-            , "abc"
-            , "ba"
-            , "band"
-        ]
+        "symbols": ["aapl", "abb", "abc", "ba", "band"]
     }
-
 }
