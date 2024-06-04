@@ -1,10 +1,9 @@
-from pyspark.sql import SparkSession, DataFrame
-from pyspark.sql.types import *
-from pyspark.sql.functions import *
-import argparse
+from pathlib import Path
 
-from data_store import DataStore
+from pyspark.sql.functions import *
+
 from app_context import AppContext
+from data_store import DataStore
 
 
 class PrepareStep:
@@ -14,7 +13,7 @@ class PrepareStep:
         self.config = app_context.config
         self.data_store = data_store
 
-    def run(self) -> None:  
+    def run(self):
         symbols = self.config["prepare"]["symbols"]
 
         for symbol in symbols:
@@ -23,13 +22,12 @@ class PrepareStep:
 
 
 if __name__ == "__main__":
-#    parser = argparse.ArgumentParser(description='Process configuration file for Spark application.')
-#    parser.add_argument('config_file', type=str, help='Path to the configuration file')
-#    args = parser.parse_args()
-    
-    #app_context = AppContext(args.config_file)
-    app_context = AppContext()
+    if len(sys.argv) == 2:
+        config_file = sys.argv[1]
+    else:
+        config_file = "config/config.json"
 
+    app_context = AppContext(Path(config_file))
     data_store = DataStore(app_context)
     prepare_step = PrepareStep(app_context, data_store)
     prepare_step.run()
